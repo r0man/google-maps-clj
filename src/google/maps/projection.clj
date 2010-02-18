@@ -34,9 +34,14 @@
   "Returns the x coordinate of the longitude for the zoom level."
   [longitude zoom]
   (+ 0.5
-     (radius zoom)
      (* (radius zoom) (. Math toRadians longitude))
      (false-northing zoom)))
+
+(defn location->coords
+  "Returns the coordinates of the location for the zoom level."
+  [location zoom]
+  {:x (longitude->x-coord (:longitude location))
+   :y (latitude->y-coord (:latitude location))})
 
 (defn x-coord->longitude [x-coord zoom]
   "Returns the longitude of the x coordinate for the zoom level."
@@ -46,7 +51,7 @@
 
 (defn y-coord->latitude [y-coord zoom]
   "Returns the latitude of the y coordinate for the zoom level."
-  (let [value (. Math exp  (* -1.0 (/ (+ y-coord (false-easting zoom)) (radius zoom))))]
+  (let [value (. Math exp (/ (* -1.0 (+ y-coord (false-easting zoom))) (radius zoom)))]
     (* -1.0 (. Math toDegrees (- (/ Math/PI 2.0) (* 2.0 (. Math atan value)))))))
 
 (defn coords->location
@@ -54,9 +59,3 @@
   [coords zoom]
   {:latitude (y-coord->latitude (:y coords))
    :longitude (x-coord->longitude (:x coords))})
-
-(defn location->coords
-  "Returns the coordinates of the location for the zoom level."
-  [location zoom]
-  {:x (longitude->x-coord (:longitude location))
-   :y (latitude->y-coord (:latitude location))})
