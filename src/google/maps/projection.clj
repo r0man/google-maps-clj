@@ -28,12 +28,12 @@
   [latitude zoom]
   (let [sinus (. Math sin (. Math toRadians latitude))
         pixel (* (/ (radius zoom) 2.0) (. Math log (/ (+ 1.0 sinus) (- 1.0 sinus))))]
-    (+ 0.5 (* -1.0 (+ pixel (false-easting zoom))))))
+    (int (+ 0.5 (* -1.0 (+ pixel (false-easting zoom)))))))
 
 (defn longitude->x-coord
   "Returns the x coordinate of the longitude for the zoom level."
   [longitude zoom]
-  (+ 0.5 (* (radius zoom) (. Math toRadians longitude)) (false-northing zoom)))
+  (int (+ 0.5 (* (radius zoom) (. Math toRadians longitude)) (false-northing zoom))))
 
 (defn location->coords
   "Returns the coordinates of the location for the zoom level."
