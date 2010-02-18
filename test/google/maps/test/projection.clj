@@ -130,8 +130,8 @@
        0 256 1 180
        0 256 2 90))
 
-(deftest test-x-delta
-  (are [lon1 lon2 zoom expected] (is (= (x-delta lon1 lon2 zoom) expected))
+(deftest test-x-coord-delta
+  (are [lon1 lon2 zoom expected] (is (= (x-coord-delta lon1 lon2 zoom) expected))
        0 0 0 0
        0 0 1 0
        0 0 2 0
@@ -139,8 +139,8 @@
        *lon-min* *lon-max* 1 512
        *lon-min* *lon-max* 2 1024))
 
-(deftest test-y-delta
-  (are [lat1 lat2 zoom expected] (is (= (y-delta lat1 lat2 zoom) expected))
+(deftest test-y-coord-delta
+  (are [lat1 lat2 zoom expected] (is (= (y-coord-delta lat1 lat2 zoom) expected))
        0 0 0 0
        0 0 1 0
        0 0 2 0

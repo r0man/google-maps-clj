@@ -69,12 +69,12 @@
   [x1 x2 zoom]
   (- (x-coord->longitude x2 zoom) (x-coord->longitude x1 zoom)))
 
-(defn x-delta
+(defn x-coord-delta
   "Returns the x coordinate delta between the longitudes."
   [longitude1 longitude2 zoom]
   (- (longitude->x-coord longitude2 zoom) (longitude->x-coord longitude1 zoom)))
 
-(defn y-delta
+(defn y-coord-delta
   "Returns the y coordinate delta between the latitudes."
   [latitude1 latitude2 zoom]
   (- (latitude->y-coord latitude2 zoom) (latitude->y-coord latitude1 zoom)))
