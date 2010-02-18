@@ -1,5 +1,4 @@
 (ns google.maps.test.projection
-  (:import Projection)
   (:use clojure.test google.maps.projection))
 
 (def *lat-max* 85.05112877980659)
