@@ -111,3 +111,23 @@
     (is (= (coords->location coords 0) {:latitude -85.05112877980659 :longitude -180}))
     (is (= (coords->location coords 1) {:latitude 0 :longitude 0}))
     (is (= (coords->location coords 2) {:latitude 66.51326044311185 :longitude -90}))))
+
+(deftest test-latitude-delta
+  (are [y1 y2 zoom expected] (is (= (latitude-delta y1 y2 zoom) expected))
+       0 0 0 0
+       0 0 1 0
+       0 0 2 0))
+
+(deftest test-longitude-delta
+  (are [x1 x2 zoom expected] (is (= (longitude-delta x1 x2 zoom) expected))
+       0 0 0 0
+       0 0 1 0
+       0 0 2 0
+       0 256 0 0))
+
+(deftest test-distance-x
+  (are [lon1 lon2 zoom expected] (is (= (longitude-delta lon1 lon2 zoom) expected))
+       0 0 0 0
+       0 0 1 0
+       0 0 2 0
+       0 256 0 0))

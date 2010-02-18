@@ -58,3 +58,16 @@
   [coords zoom]
   {:latitude (y-coord->latitude (:y coords) zoom)
    :longitude (x-coord->longitude (:x coords) zoom)})
+
+(defn latitude-delta [y1 y2 zoom]
+  (- (y-coord->latitude y2 zoom) (y-coord->latitude y1 zoom)))
+
+(defn longitude-delta [x1 x2 zoom]
+  (- (x-coord->longitude x2 zoom) (x-coord->longitude x1 zoom)))
+
+(defn distance-x [longitude1 longitude2 zoom]
+  (- (longitude->x-coord longitude2 zoom) (longitude->x-coord longitude1 zoom)))
+
+(defn distance-y [latitude1 latitude2 zoom]
+  (- (latitude->y-coord latitude2 zoom) (latitude->y-coord latitude1 zoom)))
+
