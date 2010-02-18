@@ -19,3 +19,18 @@
   "Returns the false northing for the zoom level."
   [#^int zoom] (/ (circumference zoom) -2.0))
 
+(defn latitude->y-coord
+  "Returns the y coordinate of the latitude for the zoom level."
+  [latitude zoom]
+  (let [sinus (. Math sin (. Math toRadians latitude))
+        pixel (* (/ (radius zoom) 2.0) (. Math log (/ (+ 1.0 sinus) (- 1.0 sinus))))]
+    (+ 0.5 (* -1.0 (+ pixel (false-easting zoom))))))
+
+(defn longitude->x-coord
+  "Returns the x coordinate of the longitude for the zoom level."
+  [longitude zoom]
+  (+
+   0.5
+   (radius zoom)
+   (* (radius zoom) (. Math toRadians longitude))
+   (false-northing zoom)))
