@@ -2,8 +2,11 @@
   (:import Projection)
   (:use clojure.test google.maps.projection))
 
+(def *lat-max* 85.05112877980659)
 (def *lat-min* -85.05112877980659)
-(def *lat-max* (* -1.0 *lat-min*))
+
+(def *lon-max* 180)
+(def *lon-min* -180)
 
 (deftest test-tiles
   (are [zoom expected]
@@ -63,12 +66,18 @@
 (deftest test-longitude->x-coord
     (are [longitude zoom expected]
        (is (= (longitude->x-coord longitude zoom) expected))
-       -180 0 0
+       *lon-min* 0 0
        0 0 128       
-       180 0 256
-       -180 1 0
+       *lon-max* 0 256
+       *lon-min* 1 0
        0 1 256      
-       180 1 512))
+       *lon-max* 1 512))
+
+(deftest test-location->coords
+  (let [location {:latitude 0 :longitude 0}]
+    (is (= (location->coords location 0) {:x 128 :y 128}))
+    (is (= (location->coords location 1) {:x 256 :y 256}))
+    (is (= (location->coords location 2) {:x 512 :y 512}))))
 
 (deftest test-y-coord->latitude
   (are [y-coord zoom expected]
@@ -83,15 +92,23 @@
 (deftest test-x-coord->longitude
     (are [x-coord zoom expected]
          (is (= (x-coord->longitude x-coord zoom) expected))
-         0 0 -180
+         0 0 *lon-min*
          128 0 0
-         256 0 -180
-         0 1 -180
+         256 0 *lon-min*
+         0 1 *lon-min*
          128 1 -90
          256 1 0))
 
-(deftest test-location->coords
-  (let [location {:latitude 0 :longitude 0}]
-    (is (= (location->coords location 0) {:x 128 :y 128}))
-    (is (= (location->coords location 1) {:x 256 :y 256}))
-    (is (= (location->coords location 2) {:x 512 :y 512}))))
+(deftest test-coords->location
+  (let [coords {:x 0 :y 0}]
+    (is (= (coords->location coords 0) {:latitude *lat-max* :longitude *lon-min*}))
+    (is (= (coords->location coords 1) {:latitude *lat-max* :longitude *lon-min*}))
+    (is (= (coords->location coords 2) {:latitude *lat-max* :longitude *lon-min*})))
+  (let [coords {:x 128 :y 128}]
+    (is (= (coords->location coords 0) {:latitude 0 :longitude 0}))
+    (is (= (coords->location coords 1) {:latitude 66.51326044311185 :longitude -90}))
+    (is (= (coords->location coords 2) {:latitude 79.17133464081945 :longitude -135})))
+  (let [coords {:x 256 :y 256}]
+    (is (= (coords->location coords 0) {:latitude -85.05112877980659 :longitude -180}))
+    (is (= (coords->location coords 1) {:latitude 0 :longitude 0}))
+    (is (= (coords->location coords 2) {:latitude 66.51326044311185 :longitude -90}))))
