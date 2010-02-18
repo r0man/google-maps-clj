@@ -3,7 +3,7 @@
   (:use [clojure.contrib.str-utils2 :only (join)])
   (:require [clojure.contrib.http.agent :as agent]))
 
-(def *base-url* "http://maps.google.com/maps/api/staticmap")
+(def *api-url* "http://maps.google.com/maps/api/staticmap")
 (def *options* {:center {:latitude 0 :longitude 0} :width 300 :height 200 :maptype "roadmap" :sensor false :zoom 1})
 
 (defn options->params [options]
@@ -27,7 +27,7 @@
   "Returns the url of the map centered at the location."
   [location & options]
   (let [options (apply hash-map options)]
-    (str *base-url* "?" (options->params (parse-options (assoc options :center location))))))
+    (str *api-url* "?" (options->params (parse-options (assoc options :center location))))))
 
 (defn static-map-bytes
   "Returns the bytes of the map centered at the location."
