@@ -51,24 +51,14 @@
        (is (= (latitude->y-coord latitude zoom) expected))
        0 0 -127.5
        0 1 -255.5
-       0 2 -511.5
-       ;; 89 0 -320.67992758647995
-       ;; 89 1 -641.8598551729599
-       ;; 89 2 -1284.2197103459198
-       ;; -89 0 65.67992758647992
-       ;; -89 1 130.85985517295984
-       ;; -89 2 261.2197103459197
-       ))
+       0 2 -511.5))
 
 (deftest test-y-coord->latitude
-    (are [y-coord zoom expected]
-         (is (= (y-coord->latitude y-coord zoom) expected))
-;         0 0 0
-         ;; 0 0 -85.05112877980659
-         ;; 0 1 -85.05112877980659
-         ;; 0 2 -85.05112877980659
-;         -127.5 0 0
-         ))
+  (are [y-coord zoom expected]
+       (is (= (y-coord->latitude y-coord zoom) expected))
+       0 0 -85.05112877980659
+       0 1 -85.05112877980659
+       0 2 -85.05112877980659))
 
 (deftest test-longitude->x-coord
     (are [longitude zoom expected]
@@ -76,6 +66,8 @@
        0 0 -127.5
        0 1 -255.5
        0 2 -511.5
+       ;; 180 0 0
+       ;; -180 0 0
        ))
 
 (deftest test-x-coord->longitude
@@ -84,3 +76,10 @@
          0 0 -180
          0 1 -180
          0 2 -180))
+
+(deftest test-location->coords
+  (let [location {:latitude 0 :longitude 0}]
+    (is (= (location->coords location 0) {:x -127.5 :y -127.5}))
+    (is (= (location->coords location 1) {:x -255.5 :y -255.5}))
+    (is (= (location->coords location 2) {:x -511.5 :y -511.5}))))
+
