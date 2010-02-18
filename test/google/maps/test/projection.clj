@@ -116,18 +116,34 @@
   (are [y1 y2 zoom expected] (is (= (latitude-delta y1 y2 zoom) expected))
        0 0 0 0
        0 0 1 0
-       0 0 2 0))
+       0 0 2 0
+       0 256 0 -170.10225755961318
+       0 256 1 *lat-min*
+       0 256 2 -18.537868336694743))
 
 (deftest test-longitude-delta
   (are [x1 x2 zoom expected] (is (= (longitude-delta x1 x2 zoom) expected))
        0 0 0 0
        0 0 1 0
        0 0 2 0
-       0 256 0 0))
+       0 256 0 0
+       0 256 1 180
+       0 256 2 90))
 
-(deftest test-distance-x
-  (are [lon1 lon2 zoom expected] (is (= (longitude-delta lon1 lon2 zoom) expected))
+(deftest test-x-delta
+  (are [lon1 lon2 zoom expected] (is (= (x-delta lon1 lon2 zoom) expected))
        0 0 0 0
        0 0 1 0
        0 0 2 0
-       0 256 0 0))
+       *lon-min* *lon-max* 0 256
+       *lon-min* *lon-max* 1 512
+       *lon-min* *lon-max* 2 1024))
+
+(deftest test-y-delta
+  (are [lat1 lat2 zoom expected] (is (= (y-delta lat1 lat2 zoom) expected))
+       0 0 0 0
+       0 0 1 0
+       0 0 2 0
+       *lat-max* *lat-min* 0 256
+       *lat-max* *lat-min* 1 512
+       *lat-max* *lat-min* 2 1024))
