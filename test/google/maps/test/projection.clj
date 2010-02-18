@@ -1,5 +1,9 @@
 (ns google.maps.test.projection
+  (:import Projection)
   (:use clojure.test google.maps.projection))
+
+(def *lat-min* -85.05112877980659)
+(def *lat-max* (* -1.0 *lat-min*))
 
 (deftest test-tiles
   (are [zoom expected]
@@ -31,60 +35,63 @@
 (deftest test-false-easting
   (are [zoom expected]
        (is (= (false-easting zoom) expected))
+       0 -128
+       1 -256
+       2 -512
+       3 -1024
+       4 -2048))
+ 
+(deftest test-false-northing
+  (are [zoom expected]
+       (is (= (false-northing zoom) expected))
        0 128
        1 256
        2 512
        3 1024
        4 2048))
  
-(deftest test-false-northing
-  (are [zoom expected]
-       (is (= (false-northing zoom) expected))
-       0 -128
-       1 -256
-       2 -512
-       3 -1024
-       4 -2048))
-
 (deftest test-latitude->y-coord
   (are [latitude zoom expected]
        (is (= (latitude->y-coord latitude zoom) expected))
-       0 0 -127
-       0 1 -255
-       0 2 -511
-       -90 0 2147483647
-       -90 1 2147483647
-       -90 2 2147483647))
-
-(deftest test-y-coord->latitude
-  (are [y-coord zoom expected]
-       (is (= (y-coord->latitude y-coord zoom) expected))
-       0 0 -85.05112877980659
-       0 1 -85.05112877980659
-       0 2 -85.05112877980659))
+       *lat-min* 0 256
+       0 0 128
+       *lat-max* 0 0
+       *lat-min* 1 512
+       0 1 256
+       *lat-max* 1 0))
 
 (deftest test-longitude->x-coord
     (are [longitude zoom expected]
        (is (= (longitude->x-coord longitude zoom) expected))
-       0 0 -127
-       0 1 -255
-       0 2 -511
-       180 0 0
-       180 1 0
-       180 2 0
-       -180 0 -255
-       -180 1 -511
-       -180 2 -1023))
+       -180 0 0
+       0 0 128       
+       180 0 256
+       -180 1 0
+       0 1 256      
+       180 1 512))
+
+(deftest test-y-coord->latitude
+  (are [y-coord zoom expected]
+       (is (= (y-coord->latitude y-coord zoom) expected))
+       0 0 *lat-max*
+       128 0 0
+       256 0 *lat-min*
+       0 1 *lat-max*
+       128 1 66.51326044311185
+       256 1 0))
 
 (deftest test-x-coord->longitude
     (are [x-coord zoom expected]
          (is (= (x-coord->longitude x-coord zoom) expected))
          0 0 -180
+         128 0 0
+         256 0 -180
          0 1 -180
-         0 2 -180))
+         128 1 -90
+         256 1 0))
 
 (deftest test-location->coords
   (let [location {:latitude 0 :longitude 0}]
-    (is (= (location->coords location 0) {:x -127 :y -127}))
-    (is (= (location->coords location 1) {:x -255 :y -255}))
-    (is (= (location->coords location 2) {:x -511 :y -511}))))
+    (is (= (location->coords location 0) {:x 128 :y 128}))
+    (is (= (location->coords location 1) {:x 256 :y 256}))
+    (is (= (location->coords location 2) {:x 512 :y 512}))))

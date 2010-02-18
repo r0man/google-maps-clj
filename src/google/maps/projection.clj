@@ -4,7 +4,8 @@
 
 (defn tiles
   "Returns the number of tiles for the zoom level."
-  [zoom] (. Math pow 2 zoom))
+  [zoom]
+  (. Math pow 2 zoom))
 
 (defn circumference
   "Returns the circumference for the zoom level."
@@ -17,11 +18,11 @@
 
 (defn false-easting
   "Returns the false easting for the zoom level."
-  [zoom] (/ (circumference zoom) 2.0))
+  [zoom] (/ (circumference zoom) -2.0))
 
 (defn false-northing
   "Returns the false northing for the zoom level."
-  [zoom] (/ (circumference zoom) -2.0))
+  [zoom] (/ (circumference zoom) 2.0))
 
 (defn latitude->y-coord
   "Returns the y coordinate of the latitude for the zoom level."
@@ -49,7 +50,7 @@
 
 (defn y-coord->latitude [y-coord zoom]
   "Returns the latitude of the y coordinate for the zoom level."
-  (let [value (. Math exp (/ (* -1.0 (+ y-coord (false-easting zoom))) (radius zoom)))]
+  (let [value (. Math exp (* -1.0 (/ (+ y-coord (false-easting zoom)) (radius zoom))))]
     (* -1.0 (. Math toDegrees (- (/ Math/PI 2.0) (* 2.0 (. Math atan value)))))))
 
 (defn coords->location
