@@ -15,3 +15,7 @@
   "Returns the false easting for the zoom level."
   [#^int zoom] (/ (circumference zoom) 2.0))
 
+(defn false-northing
+  "Returns the false northing for the zoom level."
+  [#^int zoom] (/ (circumference zoom) -2.0))
+

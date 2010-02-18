@@ -21,5 +21,11 @@
        1 256.0
        2 512.0
        3 768.0))
-
+ 
+(deftest test-false-northing
+  (are [zoom expected]
+       (is (= (false-northing zoom) expected))
+       1 -256.0
+       2 -512.0
+       3 -768.0))
 
