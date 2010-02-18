@@ -6,7 +6,7 @@
 (def *api-url* "http://maps.google.com/maps/api/staticmap")
 (def *options* {:center {:latitude 0 :longitude 0} :width 300 :height 200 :maptype "roadmap" :sensor false :zoom 1})
 
-(defn options->params [options]
+(defn url-encode [options]
   (join "&" (map #(str (name (first %)) "=" (last %)) options)))
 
 (defn parse-center [options]
@@ -27,7 +27,7 @@
   "Returns the url of the map centered at the location."
   [location & options]
   (let [options (apply hash-map options)]
-    (str *api-url* "?" (options->params (parse-options (assoc options :center location))))))
+    (str *api-url* "?" (url-encode (parse-options (assoc options :center location))))))
 
 (defn static-map-bytes
   "Returns the bytes of the map centered at the location."

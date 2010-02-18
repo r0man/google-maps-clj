@@ -4,9 +4,9 @@
 (def *location* {:latitude 52.523 :longitude 13.411})
 
 (deftest test-options->map
-  (is (= (options->params {:center "52.523,13.411"})
+  (is (= (url-encode {:center "52.523,13.411"})
          "center=52.523,13.411"))
-  (is (= (options->params {:center "52.523,13.411" :zoom 1})
+  (is (= (url-encode {:center "52.523,13.411" :zoom 1})
          "center=52.523,13.411&zoom=1")))
 
 (deftest test-parse-options
