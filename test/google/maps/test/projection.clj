@@ -15,4 +15,11 @@
        2 162.97466172610083
        3 244.46199258915124))
 
+(deftest test-false-easting
+  (are [zoom expected]
+       (is (= (false-easting zoom) expected))
+       1 256.0
+       2 512.0
+       3 768.0))
+
 

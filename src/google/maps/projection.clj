@@ -10,3 +10,8 @@
   "Returns the radius for the zoom level."
   [#^int zoom]
   (/ (circumference zoom) (* 2.0 Math/PI)))
+
+(defn false-easting
+  "Returns the false easting for the zoom level."
+  [#^int zoom] (/ (circumference zoom) 2.0))
+
