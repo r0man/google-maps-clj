@@ -2,7 +2,11 @@
 
 (def *tile-size* 256)
 
-(defn circumference [zoom]
-  (* *tile-size* (bit-shift-left zoom 1)))
+(defn circumference
+  "Returns the circumference for the zoom level."
+  [#^int zoom] (* *tile-size* (bit-shift-left zoom 1)))
 
-;(circumference 3)
+(defn radius
+  "Returns the radius for the zoom level."
+  [#^int zoom]
+  (/ (circumference zoom) (* 2.0 Math/PI)))
