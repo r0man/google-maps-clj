@@ -49,4 +49,14 @@
   (let [value (. Math exp  (* -1.0 (/ (+ y-coord (false-easting zoom)) (radius zoom))))]
     (* -1.0 (. Math toDegrees (- (/ Math/PI 2.0) (* 2.0 (. Math atan value)))))))
 
+(defn coords->location
+  "Returns the location of the coordinates for the zoom level."
+  [coords zoom]
+  {:latitude (y-coord->latitude (:y coords))
+   :longitude (x-coord->longitude (:x coords))})
 
+(defn location->coords
+  "Returns the coordinates of the location for the zoom level."
+  [location zoom]
+  {:x (longitude->x-coord (:longitude location))
+   :y (latitude->y-coord (:latitude location))})
