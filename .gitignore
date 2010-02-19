@@ -1,4 +1,5 @@
 autodoc
+pom.xml
 pom-generated.xml
 Manifest.txt
 google-maps-clj.jar

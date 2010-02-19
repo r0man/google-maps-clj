@@ -1,4 +1,4 @@
-(defproject google-maps-clj "0.0.1-SNAPSHOT"
+(defproject google-maps "0.0.1-SNAPSHOT"
   :description "Google Maps Clojure Library"
   :dependencies [[org.clojure/clojure "1.1.0"]
                  [org.clojure/clojure-contrib "1.0-SNAPSHOT"]]
