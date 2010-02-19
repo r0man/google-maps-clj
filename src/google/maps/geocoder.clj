@@ -18,3 +18,7 @@
 (defn geocode [query & options]
   (read-json (agent/string (agent/http-agent (apply geocode-url query options)))))
 
+(defmacro with-google-maps-api-key [key & body]
+  `(binding [*api-key* key]
+     ~@body))
+

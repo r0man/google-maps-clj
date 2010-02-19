@@ -22,3 +22,8 @@
                         "AddressDetails" {"AddressLine" ["Arabian Sea"], "Accuracy" 0}, "address" "Arabian Sea", "id" "p1"} {"Point" {"coordinates" [34.508523 -8.783195 0]}, "ExtendedData" {"LatLonBox" {"west" -26.5869, "east" 60.5566, "south" -37.5341572, "north" 37.9615}}, "AddressDetails" {"AddressLine" ["Africa"], "Accuracy" 0}, "address" "Africa", "id" "p2"}],
                       "Status" {"request" "geocode", "code" 200},
                       "name" "13.41,52.52"}))
+
+(deftest test-with-google-maps-api-key
+  (with-google-maps-api-key "my-key"
+    (is (= *api-key*) "my-key")))
+
