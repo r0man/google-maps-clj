@@ -23,7 +23,7 @@
                       "Status" {"request" "geocode", "code" 200},
                       "name" "13.41,52.52"}))
 
-(deftest test-with-google-maps-api-key
-  (with-google-maps-api-key "my-key"
+(deftest test-with-api-key
+  (with-api-key "my-key"
     (is (= *api-key*) "my-key")))
 

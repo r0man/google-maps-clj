@@ -11,14 +11,20 @@
 (defn- parse-options [options]
   (merge *options* options))
 
-(defn geocode-url [query & options]
+(defn geocode-url
+  "Returns the url for geocoding the query."
+  [query & options]
   (let [options (apply hash-map options)]
     (str *api-url* "?" (url-encode (parse-options (assoc options :q query :key *api-key*))))))
 
-(defn geocode [query & options]
+(defn geocode
+  "Returns the geocoder result the query."
+  [query & options]
   (read-json (agent/string (agent/http-agent (apply geocode-url query options)))))
 
-(defmacro with-google-maps-api-key [key & body]
+(defmacro with-api-key
+  "Binds the key to *api-key* and evaluates body."
+  [key & body]
   `(binding [*api-key* key]
      ~@body))
 
