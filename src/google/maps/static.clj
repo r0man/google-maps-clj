@@ -1,22 +1,19 @@
 (ns google.maps.static
   (:import javax.swing.ImageIcon)
-  (:use [clojure.contrib.str-utils2 :only (join)])
+  (:use google.maps.util)
   (:require [clojure.contrib.http.agent :as agent]))
 
 (def *api-url* "http://maps.google.com/maps/api/staticmap")
 (def *options* {:center {:latitude 0 :longitude 0} :width 300 :height 200 :maptype "roadmap" :sensor false :zoom 1})
 
-(defn url-encode [options]
-  (join "&" (map #(str (name (first %)) "=" (last %)) options)))
-
-(defn parse-center [options]
+(defn- parse-center [options]
   (let [{:keys [latitude longitude]} (:center options)]
     (str latitude "," longitude)))
 
-(defn parse-size [options]
+(defn- parse-size [options]
   (str (or (:width options) (:width *options*)) "x" (or (:height options) (:height *options*))))
 
-(defn parse-options [options]
+(defn- parse-options [options]
   (dissoc
    (assoc (merge *options* options)
      :center (parse-center options)
