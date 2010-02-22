@@ -1,5 +1,5 @@
 (ns google.maps.static
-  (:import javax.swing.ImageIcon)
+  (:import javax.swing.ImageIcon java.awt.image.BufferedImage)
   (:use google.maps.util)
   (:require [clojure.contrib.http.agent :as agent]))
 
@@ -32,5 +32,9 @@
 
 (defn static-map-image
   "Returns the image of the map centered at the location."
-  [location & options] (.getImage (ImageIcon. (apply static-map-bytes location options))))
-
+  [location & options]
+  (let [icon (ImageIcon. (apply static-map-bytes location options))
+        options (apply hash-map options)
+        image (BufferedImage. (or (:width options) (:width *options*)) (or (:height options) (:height *options*)) BufferedImage/TYPE_3BYTE_BGR)]
+    (. (.getGraphics image) drawImage (.getImage icon) 0 0 nil)
+    image))
