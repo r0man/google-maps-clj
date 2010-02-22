@@ -159,3 +159,16 @@
     *lat-max* *lat-min* 0 256
     *lat-max* *lat-min* 1 512
     *lat-max* *lat-min* 2 1024))
+
+(deftest test-coord-delta
+  (are [lat1 lon1 lat2 lon2 zoom x y]
+    (is (= (coord-delta {:latitude lat1 :longitude lon1} {:latitude lat2 :longitude lon2} zoom) {:x x :y y}))
+    0 0 0 0 0 0 0
+    0 0 0 0 1 0 0
+    0 0 0 0 2 0 0
+    0 -180 0 0 0 128 0
+    0 -180 0 0 1 256 0
+    0 -180 0 0 2 512 0
+    0 180 0 0 0 -128 0
+    0 180 0 0 1 -256 0
+    0 180 0 0 2 -512 0))

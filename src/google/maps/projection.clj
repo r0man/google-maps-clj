@@ -71,11 +71,14 @@
 
 (defn x-coord-delta
   "Returns the x coordinate delta between the longitudes."
-  [longitude1 longitude2 zoom]
-  (- (longitude->x-coord longitude2 zoom) (longitude->x-coord longitude1 zoom)))
+  [longitude1 longitude-2 zoom]
+  (- (longitude->x-coord longitude-2 zoom) (longitude->x-coord longitude1 zoom)))
 
 (defn y-coord-delta
   "Returns the y coordinate delta between the latitudes."
-  [latitude1 latitude2 zoom]
-  (- (latitude->y-coord latitude2 zoom) (latitude->y-coord latitude1 zoom)))
+  [latitude-1 latitude2 zoom]
+  (- (latitude->y-coord latitude2 zoom) (latitude->y-coord latitude-1 zoom)))
 
+(defn coord-delta [location-1 location-2 zoom]
+  {:x (x-coord-delta (:longitude location-1) (:longitude location-2) zoom)
+   :y (y-coord-delta (:latitude location-1) (:latitude location-2) zoom)})
