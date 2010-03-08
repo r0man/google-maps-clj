@@ -21,19 +21,19 @@
    :width :height))
 
 (defn static-map-url
-  "Returns the url of the map centered at the location."
-  [location & options]
+  "Returns the url of the map centered at the center."
+  [center & options]
   (let [options (apply hash-map options)]
-    (str *api-url* "?" (url-encode (parse-options (assoc options :center location))))))
+    (str *api-url* "?" (url-encode (parse-options (assoc options :center center))))))
 
 (defn static-map-bytes
-  "Returns the bytes of the map centered at the location."
-  [location & options] (agent/bytes (agent/http-agent (apply static-map-url location options))))
+  "Returns the bytes of the map centered at the center."
+  [center & options] (agent/bytes (agent/http-agent (apply static-map-url center options))))
 
 (defn static-map-image
-  "Returns the image of the map centered at the location."
-  [location & options]
-  (let [icon (ImageIcon. (apply static-map-bytes location options))
+  "Returns the image of the map centered at the center."
+  [center & options]
+  (let [icon (ImageIcon. (apply static-map-bytes center options))
         options (apply hash-map options)
         image (BufferedImage. (or (:width options) (:width *options*)) (or (:height options) (:height *options*)) BufferedImage/TYPE_3BYTE_BGR)]
     (. (.getGraphics image) drawImage (.getImage icon) 0 0 nil)

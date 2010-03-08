@@ -18,7 +18,7 @@
     (str *api-url* "?" (url-encode (parse-options (assoc options :q query :key *api-key*))))))
 
 (defn geocode
-  "Returns the geocoder result the query."
+  "Returns the answer from the geocoder for the query."
   [query & options]
   (read-json (agent/string (agent/http-agent (apply geocode-url query options)))))
 
