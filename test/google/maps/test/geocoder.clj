@@ -47,11 +47,11 @@
   (is (= (altitude *berlin*) 0.0)))
 
 (deftest test-latitude
-  (is (= (latitude *berlin*) 13.4113999)))
+  (is (= (latitude *berlin*) 52.5234051)))
 
 (deftest test-longitude
-  (is (= (longitude *berlin*) 52.5234051)))
+  (is (= (longitude *berlin*) 13.4113999)))
 
 (deftest test-location
   (is (= (location *berlin*)
-         {:altitude 0, :longitude 52.5234051, :latitude 13.4113999})))
+         {:altitude 0, :longitude 13.4113999, :latitude 52.5234051})))

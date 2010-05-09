@@ -16,25 +16,25 @@
   [response]
   (get (get (first (get response "Placemark")) "Point") "coordinates"))
 
-(defn latitude
-  "Extracts the latitude from the geocoder response."
-  [response]
-  (nth (coordinates response) 0))
-
-(defn longitude
-  "Extracts the longitude from the geocoder response."
-  [response]
-  (nth (coordinates response) 1))
-
 (defn altitude
   "Extracts the altitude from the geocoder response."
   [response]
   (nth (coordinates response) 2))
 
+(defn latitude
+  "Extracts the latitude from the geocoder response."
+  [response]
+  (nth (coordinates response) 1))
+
+(defn longitude
+  "Extracts the longitude from the geocoder response."
+  [response]
+  (nth (coordinates response) 0))
+
 (defn location
   "Extracts the location from the geocoder response."
   [response]
-  (zipmap [:latitude :longitude :altitude] (coordinates response)))
+  (zipmap [:longitude :latitude :altitude] (coordinates response)))
 
 (defn geocode-url
   "Returns the url for geocoding the query."
