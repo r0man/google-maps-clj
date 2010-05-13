@@ -1,7 +1,8 @@
 (ns google.maps.geocoder
+  (:import java.net.URL)
   (:use [clojure.contrib.json.read :only (read-json)]
-        google.maps.util)
-  (:require [clojure.contrib.http.agent :as agent]))
+        [clojure.contrib.duck-streams :only (read-lines)]
+        google.maps.util))
 
 (def *api-url* "http://maps.google.com/maps/geo")
 (def *api-key* "ABQIAAAA7Wppa7cXmDsEPzdGLSrk_xTJQa0g3IQ9GZqIMmInSLzwtGDKaBRFHdz-TBNlgTndXeES0ZvJHx5Pbw")
@@ -45,7 +46,8 @@
 (defn geocode
   "Returns the answer from the geocoder for the query."
   [query & options]
-  (read-json (agent/string (agent/http-agent (apply geocode-url query options)))))
+  (read-json
+   (apply str (read-lines (.openStream (URL. (apply geocode-url query options)))))))
 
 (defmacro with-api-key
   "Binds the key to *api-key* and evaluates body."
