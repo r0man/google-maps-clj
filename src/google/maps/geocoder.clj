@@ -17,6 +17,11 @@
   [response]
   (get (get (first (get response "Placemark")) "Point") "coordinates"))
 
+(defn address
+  "Extracts the address from the geocoder response."
+  [response]
+  (get (first (response "Placemark")) "address" ))
+
 (defn altitude
   "Extracts the altitude from the geocoder response."
   [response]
@@ -54,4 +59,3 @@
   [key & body]
   `(binding [*api-key* key]
      ~@body))
-
