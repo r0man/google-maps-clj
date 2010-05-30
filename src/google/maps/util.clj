@@ -1,6 +1,6 @@
 (ns google.maps.util
   (:import java.net.URLEncoder)
-  (:use [clojure.contrib.str-utils2 :only (join)]))
+  (:use [clojure.contrib.string :only (join)]))
 
 (defmulti url-encode
   "Returns a url encoded string of the given object."

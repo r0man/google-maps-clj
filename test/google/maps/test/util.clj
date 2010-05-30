@@ -9,5 +9,4 @@
     "13.41,52.52" "UTF-8" "13.41%2C52.52"
     :keyword "UTF-8" "keyword"
     {:center "52.523,13.411"} "UTF-8" "center=52.523%2C13.411"
-    {:center "52.523,13.411" :sensor false} "UTF-8" "center=52.523%2C13.411&sensor=false"
-    ))
+    {:center "52.523,13.411" :sensor false} "UTF-8" "center=52.523%2C13.411&sensor=false"))
