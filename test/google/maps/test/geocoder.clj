@@ -2,27 +2,7 @@
   (:use clojure.test google.maps.geocoder))
 
 (def *berlin*
-     {"Placemark"
-      [{"Point" {"coordinates" [13.4113999 52.5234051 0]},
-        "ExtendedData" {"LatLonBox" {"west" 12.8991623, "east" 13.9236375, "south" 52.3056216, "north" 52.7401142}},
-        "AddressDetails" {"Country"
-                          {"CountryNameCode" "DE",
-                           "CountryName" "Deutschland",
-                           "AdministrativeArea" {"SubAdministrativeArea" {"SubAdministrativeAreaName" "Berlin", "Locality" {"LocalityName" "Berlin"}},
-                                                 "AdministrativeAreaName" "Berlin"}}, "Accuracy" 4},
-        "address" "Berlin, Germany", "id" "p1"} ],
-      "Status" {"request" "geocode", "code" 200},
-      "name" "Berlin"})
-
-(def *africa*
-     {"Placemark"
-      [{"Point" {"coordinates" [64.33717 17.7657008 0]},
-        "ExtendedData" {"LatLonBox" {"west" 47.9455681, "east" 80.7287719, "south" 6.6168775, "north" 28.2620646}},
-        "AddressDetails" {"AddressLine" ["Arabian Sea"], "Accuracy" 0}, "address" "Arabian Sea", "id" "p1"}
-       {"Point" {"coordinates" [34.508523 -8.783195 0]},
-        "ExtendedData" {"LatLonBox" {"west" -26.5869, "east" 60.5566, "south" -37.5341572, "north" 37.9615}}, "AddressDetails" {"AddressLine" ["Africa"], "Accuracy" 0}, "address" "Africa", "id" "p2"}],
-      "Status" {"request" "geocode", "code" 200},
-      "name" "13.41,52.52"})
+     {:name "Berlin", :Status {:code 200, :request "geocode"}, :Placemark [{:id "p1", :address "Berlin, Germany", :AddressDetails {:Accuracy 4, :Country {:AdministrativeArea {:AdministrativeAreaName "Berlin", :SubAdministrativeArea {:Locality {:LocalityName "Berlin"}, :SubAdministrativeAreaName "Berlin"}}, :CountryName "Deutschland", :CountryNameCode "DE"}}, :ExtendedData {:LatLonBox {:north 52.7401142, :south 52.3056216, :east 13.9236375, :west 12.8991623}}, :Point {:coordinates [13.4113999 52.5234051 0]}}]})
 
 (deftest test-geocode-url
   (are [query options expected]
@@ -33,8 +13,7 @@
 (deftest test-geocode
   (are [query options expected]
     (is (= (apply geocode query options) expected))
-    "Berlin" {} *berlin*
-    "13.41,52.52" {} *africa*))
+    "Berlin" {} *berlin*))
 
 (deftest test-with-api-key
   (with-api-key "my-key"

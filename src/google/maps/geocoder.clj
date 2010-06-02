@@ -1,6 +1,6 @@
 (ns google.maps.geocoder
   (:import java.net.URL)
-  (:use [clojure.contrib.json.read :only (read-json)]
+  (:use [clojure.contrib.json :only (read-json)]
         [clojure.contrib.duck-streams :only (read-lines)]
         google.maps.util))
 
@@ -15,12 +15,12 @@
 (defn coordinates
   "Extracts the coordinates from the geocoder response."
   [response]
-  (get (get (first (get response "Placemark")) "Point") "coordinates"))
+  (get (get (first (get response :Placemark)) :Point) :coordinates))
 
 (defn address
   "Extracts the address from the geocoder response."
   [response]
-  (get (first (response "Placemark")) "address" ))
+  (get (first (response :Placemark)) :address ))
 
 (defn altitude
   "Extracts the altitude from the geocoder response."
