@@ -1,6 +1,6 @@
 (ns google.maps.location)
 
-(defstruct location :latitude :longitude)
+(defrecord Location [latitude longitude])
 
 (defn make-location [latitude longitude]
-  (struct location latitude longitude))
+  (Location. latitude longitude))

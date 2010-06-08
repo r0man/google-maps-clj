@@ -1,5 +1,5 @@
 (ns google.maps.test.projection
-  (:use clojure.test google.maps.projection))
+  (:use clojure.test google.maps.location google.maps.projection))
 
 (def *lat-max* 85.05112877980659)
 (def *lat-min* -85.05112877980659)
@@ -73,7 +73,7 @@
     *lon-max* 1 512))
 
 (deftest test-location->coords
-  (let [location {:latitude 0 :longitude 0}]
+  (let [location (make-location 0 0)]
     (are [zoom x y]
       (is (= (location->coords location zoom) {:x x :y y}))
       0 128 128
@@ -103,19 +103,19 @@
 (deftest test-coords->location
   (let [coords {:x 0 :y 0}]
     (are [zoom latitude longitude]
-      (is (= (coords->location coords zoom) {:latitude latitude :longitude longitude}))
+      (is (= (coords->location coords zoom) (make-location latitude longitude)))
       0 *lat-max* *lon-min*
       1 *lat-max* *lon-min*
       2 *lat-max* *lon-min*))
   (let [coords {:x 128 :y 128}]
     (are [zoom latitude longitude]
-      (is (= (coords->location coords zoom) {:latitude latitude :longitude longitude}))
+      (is (= (coords->location coords zoom) (make-location latitude longitude)))
       0 0 0
       1 66.51326044311185 -90
       2 79.17133464081945 -135))  
   (let [coords {:x 256 :y 256}]
     (are [zoom latitude longitude]
-      (is (= (coords->location coords zoom) {:latitude latitude :longitude longitude}))
+      (is (= (coords->location coords zoom) (make-location latitude longitude)))
       0 -85.05112877980659 -180
       1 0 0
       2 66.51326044311185 -90)))
@@ -141,8 +141,8 @@
     0 256 2 90))
 
 (deftest test-x-coord-delta
-  (are [lon1 lon2 zoom expected]
-    (is (= (x-coord-delta lon1 lon2 zoom) expected))
+  (are [longitude-1 longitude-2 zoom expected]
+    (is (= (x-coord-delta longitude-1 longitude-2 zoom) expected))
     0 0 0 0
     0 0 1 0
     0 0 2 0
@@ -151,8 +151,8 @@
     *lon-min* *lon-max* 2 1024))
 
 (deftest test-y-coord-delta
-  (are [lat1 lat2 zoom expected]
-    (is (= (y-coord-delta lat1 lat2 zoom) expected))
+  (are [latitude-1 latitude-2 zoom expected]
+    (is (= (y-coord-delta latitude-1 latitude-2 zoom) expected))
     0 0 0 0
     0 0 1 0
     0 0 2 0
@@ -161,8 +161,9 @@
     *lat-max* *lat-min* 2 1024))
 
 (deftest test-coord-delta
-  (are [lat1 lon1 lat2 lon2 zoom x y]
-    (is (= (coord-delta {:latitude lat1 :longitude lon1} {:latitude lat2 :longitude lon2} zoom) {:x x :y y}))
+  (are [latitude-1 longitude-1 latitude-2 longitude-2 zoom x y]
+    (is (= (coord-delta (make-location latitude-1 longitude-1) (make-location latitude-2 longitude-2) zoom)
+           {:x x :y y}))
     0 0 0 0 0 0 0
     0 0 0 0 1 0 0
     0 0 0 0 2 0 0
