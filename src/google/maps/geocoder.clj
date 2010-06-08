@@ -17,10 +17,13 @@
   [response]
   (get (get (first (get response :Placemark)) :Point) :coordinates))
 
+(defn addresses
+  "Extracts the addresses from the geocoder response."
+  [response] (map #(get % :address) (response :Placemark)))
+
 (defn address
-  "Extracts the address from the geocoder response."
-  [response]
-  (get (first (response :Placemark)) :address ))
+  "Extracts the first address from the geocoder response."
+  [response] (first (addresses response)))
 
 (defn altitude
   "Extracts the altitude from the geocoder response."

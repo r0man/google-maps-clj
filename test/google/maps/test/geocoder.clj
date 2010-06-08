@@ -22,6 +22,9 @@
 (deftest test-address
   (is (= (address *berlin*) "Berlin, Germany")))
 
+(deftest test-addresses
+  (is (= (addresses *berlin*) ["Berlin, Germany"])))
+
 (deftest test-coordinates
   (is (= (coordinates *berlin*) [13.4113999 52.5234051 0])))
 
