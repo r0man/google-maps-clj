@@ -10,3 +10,10 @@
     (is (= (:latitude location) 1))
     (is (= (:longitude location) 2))
     (is (= (:altitude location) 3))))
+
+(deftest test-location?
+  (is (not (location? nil)))
+  (is (not (location? "")))
+  (is (not (location? {:latitude 0})))
+  (is (not (location? {:longitude 0})))
+  (is (location? {:latitude 1 :longitude 2})))
