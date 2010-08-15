@@ -34,6 +34,9 @@
           :viewport {:southwest {:lat 52.3056216, :lng 12.8991623}, :northeast {:lat 52.7401142, :lng 13.9236375}}
           :bounds {:southwest {:lat 52.338079, :lng 13.088304}, :northeast {:lat 52.675323, :lng 13.760909}}})))
 
+(deftest test-location
+  (is (= (location *berlin*) {:latitude 52.5234051, :longitude 13.4113999})))
+
 (deftest test-partial-match?
   (is (not (partial-match? *berlin*))))
 

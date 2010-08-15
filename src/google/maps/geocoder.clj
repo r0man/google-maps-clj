@@ -52,6 +52,12 @@
   "Returns the geometry of the result."
   [result] (:geometry result))
 
+(defn location
+  "Returns the location of the result geometry."
+  [result]
+  (if-let [location (:location (:geometry result))]
+    {:latitude (:lat location) :longitude (:lng location)}))
+
 (defn partial-match?
   "Returns true if the result is a partial match, otherwise false.
 
