@@ -1,42 +1,73 @@
 (ns google.maps.test.geocoder
-  (:use clojure.test google.maps.geocoder))
+  (:use clojure.test google.maps.geocoder google.maps.test))
+
+(refer-private 'google.maps.geocoder)
 
 (def *berlin*
-     {:name "Berlin", :Status {:code 200, :request "geocode"}, :Placemark [{:id "p1", :address "Berlin, Germany", :AddressDetails {:Accuracy 4, :Country {:AdministrativeArea {:AdministrativeAreaName "Berlin", :SubAdministrativeArea {:Locality {:LocalityName "Berlin"}, :SubAdministrativeAreaName "Berlin"}}, :CountryName "Deutschland", :CountryNameCode "DE"}}, :ExtendedData {:LatLonBox {:north 52.7401142, :south 52.3056216, :east 13.9236375, :west 12.8991623}}, :Point {:coordinates [13.4113999 52.5234051 0]}}]})
+     {:types ["locality" "political"]
+      :formatted_address "Berlin, Germany"
+      :address_components [{:long_name "Berlin", :short_name "Berlin", :types ["locality" "political"]}
+                           {:long_name "Berlin", :short_name "Berlin", :types ["administrative_area_level_2" "political"]}
+                           {:long_name "Berlin", :short_name "Berlin", :types ["administrative_area_level_1" "political"]}
+                           {:long_name "Germany", :short_name "DE", :types ["country" "political"]}]
+      :geometry {:location {:lat 52.5234051, :lng 13.4113999}, :location_type "APPROXIMATE"
+                 :viewport {:southwest {:lat 52.3056216, :lng 12.8991623}, :northeast {:lat 52.7401142, :lng 13.9236375}},
+                 :bounds {:southwest {:lat 52.338079, :lng 13.088304}, :northeast {:lat 52.675323, :lng 13.760909}}}})
+
+(deftest test-address-components
+  (is (= (address-components *berlin*)
+         [{:long_name "Berlin", :short_name "Berlin", :types ["locality" "political"]}
+          {:long_name "Berlin", :short_name "Berlin", :types ["administrative_area_level_2" "political"]}
+          {:long_name "Berlin", :short_name "Berlin", :types ["administrative_area_level_1" "political"]}
+          {:long_name "Germany", :short_name "DE", :types ["country" "political"]}])))
+
+(deftest test-countries
+  (is (= (countries *berlin*) [{:long_name "Germany", :short_name "DE", :types ["country" "political"]}])))
+
+(deftest test-formatted-address
+  (is (= (formatted-address *berlin*) "Berlin, Germany")))
+
+(deftest test-geometry
+  (is (= (geometry *berlin*)
+         {:location {:lat 52.5234051, :lng 13.4113999}
+          :location_type "APPROXIMATE"
+          :viewport {:southwest {:lat 52.3056216, :lng 12.8991623}, :northeast {:lat 52.7401142, :lng 13.9236375}}
+          :bounds {:southwest {:lat 52.338079, :lng 13.088304}, :northeast {:lat 52.675323, :lng 13.760909}}})))
+
+(deftest test-partial-match?
+  (is (not (partial-match? *berlin*))))
+
+(deftest test-types
+  (is (= (types *berlin*) ["locality" "political"])))
 
 (deftest test-geocode-url
   (are [query options expected]
     (is (= (apply geocode-url query options) expected))
-    "Berlin" {} "http://maps.google.com/maps/geo?q=Berlin&key=ABQIAAAA7Wppa7cXmDsEPzdGLSrk_xTJQa0g3IQ9GZqIMmInSLzwtGDKaBRFHdz-TBNlgTndXeES0ZvJHx5Pbw&output=json&sensor=false"
-    "13.41,52.52" {} "http://maps.google.com/maps/geo?q=13.41%2C52.52&key=ABQIAAAA7Wppa7cXmDsEPzdGLSrk_xTJQa0g3IQ9GZqIMmInSLzwtGDKaBRFHdz-TBNlgTndXeES0ZvJHx5Pbw&output=json&sensor=false"))
+    "Berlin" {} "http://maps.google.com/maps/api/geocode/json?address=Berlin&sensor=false"
+    "52.52,13.41" {} "http://maps.google.com/maps/api/geocode/json?address=52.52%2C13.41&sensor=false"
+    {:latitude 52.52 :longitude 13.41} {} "http://maps.google.com/maps/api/geocode/json?latlng=52.52%2C13.41&sensor=false"))
 
-(deftest test-geocode
-  (are [query options expected]
-    (is (= (apply geocode query options) expected))
-    "Berlin" {} *berlin*))
+(deftest test-geocode-with-language
+  (is (= (formatted-address (first (geocode "Berlin" :language "en")))
+         "Berlin, Germany"))
+  (is (= (formatted-address (first (geocode "Berlin" :language "de")))
+         "Berlin, Deutschland"))
+  (is (= (formatted-address (first (geocode "Berlin" :language "fr")))
+         "Berlin, Allemagne")))
 
-(deftest test-with-api-key
-  (with-api-key "my-key"
-    (is (= *api-key*) "my-key")))
+(deftest test-geocode-with-region
+  (is (= (formatted-address (first (geocode "Santiago" :region "es")))
+         "Santiago del Teide, Spain"))
+  (is (= (formatted-address (first (geocode "Santiago" :region "us")))
+         "Quilicura, Santiago, Chile")))
 
-(deftest test-address
-  (is (= (address *berlin*) "Berlin, Germany")))
+(deftest test-geocode-unknown
+  (is (empty? (geocode "A secret unknown location"))))
 
-(deftest test-addresses
-  (is (= (addresses *berlin*) ["Berlin, Germany"])))
-
-(deftest test-coordinates
-  (is (= (coordinates *berlin*) [13.4113999 52.5234051 0])))
-
-(deftest test-altitude
-  (is (= (altitude *berlin*) 0.0)))
-
-(deftest test-latitude
-  (is (= (latitude *berlin*) 52.5234051)))
-
-(deftest test-longitude
-  (is (= (longitude *berlin*) 13.4113999)))
-
-(deftest test-location
-  (is (= (location *berlin*)
-         {:altitude 0, :longitude 13.4113999, :latitude 52.5234051})))
+(deftest test-request-options
+  (is (= (request-options "Berlin")
+         (assoc *default-options* :address "Berlin")))
+  (is (= (request-options {:latitude 52.52, :longitude 13.41} :language "de" :region "de")
+         (assoc *default-options* :language "de" :region "de" :latlng "52.52,13.41")))
+  (is (= (request-options {:latitude 52.52, :longitude 13.41} :language "de" :region "de")
+         (assoc *default-options* :language "de" :region "de" :latlng "52.52,13.41"))))
