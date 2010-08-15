@@ -8,3 +8,7 @@
 (defn location?
   "Returns true if arg is a location, otherwise false."
   [arg] (and (:latitude arg) (:longitude arg)))
+
+(defn format-location [location]
+  (if (location? location)
+    (str (:latitude location) "," (:longitude location))))
