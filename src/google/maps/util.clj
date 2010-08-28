@@ -12,7 +12,7 @@
 (defmethod url-encode clojure.lang.Keyword [keyword & [encoding]]
   (url-encode (name keyword) encoding))
 
-(defmethod url-encode clojure.lang.PersistentArrayMap [args & [encoding]]
+(defmethod url-encode clojure.lang.IPersistentMap [args & [encoding]]
   (join "&" (map (fn [[k v]] (str (url-encode k encoding) "=" (url-encode v encoding))) args)))
 
 (defmethod url-encode :default [arg & [encoding]]
