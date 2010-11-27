@@ -38,10 +38,12 @@
   (is (= "Berlin" (locality *berlin*))))
 
 (deftest test-administrative-area-level-1
-  (is (= "Berlin" (administrative-area-level-1 *berlin*))))
+  (is (= "Berlin" (:long_name (administrative-area-level-1 *berlin*))))
+  (is (= "Berlin" (:short_name (administrative-area-level-1 *berlin*)))))
 
 (deftest test-administrative-area-level-2
-  (is (= "Berlin" (administrative-area-level-2 *berlin*))))
+  (is (= "Berlin" (:long_name (administrative-area-level-2 *berlin*))))
+  (is (= "Berlin" (:short_name (administrative-area-level-2 *berlin*)))))
 
 (deftest test-formatted-address
   (is (= "Senefelderstraße 24, 10437 Berlin, Germany" (formatted-address *berlin*))))

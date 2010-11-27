@@ -69,12 +69,11 @@
 
 (defn administrative-area-level-1
   "Returns the administrative area level 1 from address components."
-  [result] (:long_name (find-address-component result "administrative_area_level_1")))
+  [result] (find-address-component result "administrative_area_level_1"))
 
 (defn administrative-area-level-2
   "Returns the administrative area level 2 from address components."
-  [result] (:long_name (find-address-component result "administrative_area_level_2")))
-
+  [result] (find-address-component result "administrative_area_level_2"))
 
 (defn formatted-address
   "Returns the formatted address of the result."
