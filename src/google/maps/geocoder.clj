@@ -40,9 +40,41 @@
   "Returns an array containing the separate address components."
   [result] (:address_components result))
 
-(defn countries
+(defn- find-address-component [result component]
+  (first (filter #(includes? (:types %) component) (address-components result))))
+
+(defn country
   "Returns the country from the address components."
-  [result] (filter #(includes? (:types %) "country") (address-components result)))
+  [result] (find-address-component result "country"))
+
+(defn postal-code
+  "Returns the postal code from address components."
+  [result] (:long_name (find-address-component result "postal_code")))
+
+(defn street-number
+  "Returns the street number from address components."
+  [result] (:long_name (find-address-component result "street_number")))
+
+(defn route
+  "Returns the route from address components."
+  [result] (:long_name (find-address-component result "route")))
+
+(defn sub-locality
+  "Returns the sub locality from address components."
+  [result] (:long_name (find-address-component result "sublocality")))
+
+(defn locality
+  "Returns the locality from address components."
+  [result] (:long_name (find-address-component result "locality")))
+
+(defn administrative-area-level-1
+  "Returns the administrative area level 1 from address components."
+  [result] (:long_name (find-address-component result "administrative_area_level_1")))
+
+(defn administrative-area-level-2
+  "Returns the administrative area level 2 from address components."
+  [result] (:long_name (find-address-component result "administrative_area_level_2")))
+
 
 (defn formatted-address
   "Returns the formatted address of the result."
