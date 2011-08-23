@@ -2,7 +2,6 @@
   (:import java.net.URL)
   (:use [clojure.contrib.json :only (read-json)]
         [clojure.contrib.def :only (defvar)]
-        [clojure.contrib.seq :only (includes?)]
         [clojure.contrib.duck-streams :only (read-lines)]
         [google.maps.location :only (format-location location?)]
         google.maps.util))
@@ -41,7 +40,7 @@
   [result] (:address_components result))
 
 (defn- find-address-component [result component]
-  (first (filter #(includes? (:types %) component) (address-components result))))
+  (first (filter #(contains? (set (:types %)) component) (address-components result))))
 
 (defn country
   "Returns the country from the address components."
