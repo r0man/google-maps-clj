@@ -77,9 +77,9 @@
 
 (deftest test-geocode-with-region
   (is (= (formatted-address (first (geocode "Santiago" :region "es")))
-         "Santiago del Teide, Spain"))
+         "Santiago de Compostela, Spain"))
   (is (= (formatted-address (first (geocode "Santiago" :region "us")))
-         "Quilicura, Santiago, Chile")))
+         "Santiago, Santiago Metropolitan Region, Chile")))
 
 (deftest test-geocode-unknown
   (is (empty? (geocode "A secret unknown location"))))
