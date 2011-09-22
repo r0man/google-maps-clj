@@ -1,18 +1,18 @@
 (ns google.maps.projection
   (:use google.maps.location))
 
-(def *tile-size* 256)
+(def tile-size 256)
 
 (defstruct coords :x :y)
 
 (defn tiles
   "Returns the number of tiles for the zoom level."
   [^Integer zoom]
-  (. Math pow 2 zoom))
+  (int (. Math pow 2 zoom)))
 
 (defn circumference
   "Returns the circumference for the zoom level."
-  [^Integer zoom] (* *tile-size* (tiles zoom)))
+  [^Integer zoom] (* tile-size (tiles zoom)))
 
 (defn radius
   "Returns the radius for the zoom level."
@@ -21,11 +21,11 @@
 
 (defn false-easting
   "Returns the false easting for the zoom level."
-  [^Integer zoom] (/ (circumference zoom) -2.0))
+  [^Integer zoom] (int (/ (circumference zoom) -2.0)))
 
 (defn false-northing
   "Returns the false northing for the zoom level."
-  [^Integer zoom] (/ (circumference zoom) 2.0))
+  [^Integer zoom] (int (/ (circumference zoom) 2.0)))
 
 (defn latitude->y-coord
   "Returns the y coordinate of the latitude for the zoom level."
@@ -59,7 +59,7 @@
 (defn coords->location
   "Returns the location of the coordinates for the zoom level."
   [coords ^Integer zoom]
-  (make-location   
+  (make-location
    (y-coord->latitude (:y coords) zoom)
    (x-coord->longitude (:x coords) zoom)))
 

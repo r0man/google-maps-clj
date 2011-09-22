@@ -1,10 +1,9 @@
 (ns google.maps.static
-  (:import javax.swing.ImageIcon java.awt.image.BufferedImage)
-  (:use google.maps.util)
-  (:require [clojure.contrib.http.agent :as agent]))
+  (:require [clj-http.client :as client])
+  (:import javax.swing.ImageIcon java.awt.image.BufferedImage))
 
-(def *api-url* "http://maps.google.com/maps/api/staticmap")
-(def *options* {:center {:latitude 0 :longitude 0} :width 300 :height 200 :maptype "roadmap" :sensor false :zoom 1})
+(def ^:dynamic *api-url* "http://maps.google.com/maps/api/staticmap")
+(def ^:dynamic *options* {:center {:latitude 0 :longitude 0} :width 300 :height 200 :maptype "roadmap" :sensor false :zoom 1})
 
 (defn- parse-center [options]
   (let [{:keys [latitude longitude]} (:center options)]
@@ -20,15 +19,15 @@
      :size (parse-size options))
    :width :height))
 
-(defn static-map-url
-  "Returns the url of the map centered at the center."
-  [center & options]
-  (let [options (apply hash-map options)]
-    (str *api-url* "?" (url-encode (parse-options (assoc options :center center))))))
-
 (defn static-map-bytes
   "Returns the bytes of the map centered at the center."
-  [center & options] (agent/bytes (agent/http-agent (apply static-map-url center options))))
+  [center & {:as options}]
+  (.getBytes
+   (-> (client/request
+        {:method :get
+         :url *api-url*
+         :query-params (merge *options* (parse-options options))})
+       :body)))
 
 (defn static-map-image
   "Returns the image of the map centered at the center."

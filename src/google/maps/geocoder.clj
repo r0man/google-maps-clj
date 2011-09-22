@@ -1,39 +1,27 @@
 (ns google.maps.geocoder
-  (:import java.net.URL)
-  (:use [clojure.contrib.json :only (read-json)]
-        [clojure.contrib.def :only (defvar)]
-        [clojure.contrib.duck-streams :only (read-lines)]
-        [google.maps.location :only (format-location location?)]
-        google.maps.util))
+  (:require [clj-http.client :as client])
+  (:use [clojure.data.json :only (read-json)]
+        [google.maps.location :only (format-location location?)]))
 
-(defvar *api-url*
-  "http://maps.google.com/maps/api/geocode/json"
-  "The endpoint for Google's geocoding service.")
+(def ^:dynamic *api-url* "http://maps.google.com/maps/api/geocode/json")
+(def ^:dynamic *options* {:sensor false :language "en"})
 
-(defvar *default-options* {:sensor false}
-  "The default options used by geocoding requests.")
-
-(defn- request-options [query & options]
-  (merge
-   *default-options* (apply hash-map options)
-   (if (location? query)
-     {:latlng (format-location query)}
-     {:address query})))
-
-(defn geocode-url
-  "Returns the url for geocoding the query."
-  [query & options]
-  (let [options (apply request-options query (flatten options))]
-    (str *api-url* "?" (url-encode options))))
+(defn request [options]
+  (-> (client/request
+       {:method :get
+        :url *api-url*
+        :query-params (merge *options* options)})
+      :body read-json :results))
 
 (defn geocode
-  "Returns the answer from the geocoder for the query."
-  [query & options]
-  (let [response (read-json (apply str (read-lines (.openStream (URL. (apply geocode-url query options))))))]
-    (condp = (:status response)
-        "OK" (:results response)
-        "ZERO_RESULTS" []
-        :else (throw (Exception. (str response))))))
+  "Geocode the location."
+  [address & {:as options}]
+  (request (assoc options :address address)))
+
+(defn reverse-geocode
+  "Reverse geocode the location."
+  [location & {:as options}]
+  (request (assoc options :latlng (format-location location))))
 
 (defn address-components
   "Returns an array containing the separate address components."
