@@ -5,3 +5,4 @@ Manifest.txt
 *.jar
 lib
 classes
+/.lein-deps-sum
